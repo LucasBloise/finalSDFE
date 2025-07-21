@@ -1,3 +1,6 @@
+import 'package:final_sd_front/features/home/presentation/home_view_model.dart';
+import 'package:final_sd_front/features/home/services/auth_service.dart';
+import 'package:final_sd_front/features/home/services/i_auth_service.dart';
 import 'package:final_sd_front/integrations/http_helper/dio_instances.dart';
 import 'package:final_sd_front/integrations/http_helper/http_helper.dart';
 import 'package:final_sd_front/integrations/http_helper/i_http_helper.dart';
@@ -22,6 +25,10 @@ abstract class IocManager {
           drCallDio: HttpClientInstances.httpClient,
           publicRequestsDio: HttpClientInstances.httpPublicClient,
         ),
+      )
+      ..registerLazySingleton<IAuthService>(AuthService.new)
+      ..registerFactory<HomeViewModel>(
+        () => HomeViewModel(authService: resolve<IAuthService>()),
       )
       ..registerLazySingleton<INavigation>(() => Navigation(routeBuilders));
   }

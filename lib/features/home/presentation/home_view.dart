@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:final_sd_front/features/home/presentation/home_view_model.dart';
+import 'package:final_sd_front/infrastructure/ioc_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:final_sd_front/features/common/presentation/theme.dart';
 
@@ -11,6 +13,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  late final HomeViewModel _viewModel;
   final List<Map<String, String>> _allCharacters = [
     {
       'id': '1',
@@ -78,6 +81,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
+    _viewModel = IocManager.resolve<HomeViewModel>();
+    _viewModel.initAuth0();
     _foundCharacters = _allCharacters;
     super.initState();
   }
@@ -87,14 +92,13 @@ class _HomeViewState extends State<HomeView> {
     if (enteredKeyword.isEmpty) {
       results = _allCharacters;
     } else {
-      results =
-          _allCharacters
-              .where(
-                (character) => character['name']!.toLowerCase().contains(
+      results = _allCharacters
+          .where(
+            (character) => character['name']!.toLowerCase().contains(
                   enteredKeyword.toLowerCase(),
                 ),
-              )
-              .toList();
+          )
+          .toList();
     }
 
     setState(() {
@@ -112,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           TextButton(
             onPressed: () {
-              // TODO: Implement login functionality
+              _viewModel.signIn();
             },
             child: const Text(
               'Iniciar Sesión',
@@ -145,26 +149,24 @@ class _HomeViewState extends State<HomeView> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child:
-                  _foundCharacters.isNotEmpty
-                      ? GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              childAspectRatio: 0.85,
-                            ),
-                        itemCount: _foundCharacters.length,
-                        itemBuilder:
-                            (context, index) => _CharacterCard(
-                              character: _foundCharacters[index],
-                            ),
-                      )
-                      : const Text(
-                        'No se encontraron personajes',
-                        style: TextStyle(color: baseColor, fontSize: 18),
+              child: _foundCharacters.isNotEmpty
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.85,
                       ),
+                      itemCount: _foundCharacters.length,
+                      itemBuilder: (context, index) => _CharacterCard(
+                        character: _foundCharacters[index],
+                      ),
+                    )
+                  : const Text(
+                      'No se encontraron personajes',
+                      style: TextStyle(color: baseColor, fontSize: 18),
+                    ),
             ),
           ],
         ),
