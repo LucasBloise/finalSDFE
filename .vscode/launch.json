@@ -9,7 +9,7 @@
             "name": "FinalSDBloiseFront",
             "request": "launch",
             "type": "dart",
-            "args": ["-d", "chrome","--web-port", "3000"],
+            "args": ["-d", "chrome","--web-port", "3000", "--web-browser-flag=--disable-web-security"],
         },
         {
             "name": "FinalSDBloiseFront (profile mode)",

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:final_sd_front/features/home/data/character.dart';
 import 'package:final_sd_front/features/home/presentation/home_view_model.dart';
 import 'package:final_sd_front/infrastructure/ioc_manager.dart';
 import 'package:flutter/material.dart';
@@ -14,87 +15,37 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late final HomeViewModel _viewModel;
-  final List<Map<String, String>> _allCharacters = [
-    {
-      'id': '1',
-      'name': 'Rick Sanchez',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-    },
-    {
-      'id': '2',
-      'name': 'Morty Smith',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/2.jpeg',
-    },
-    {
-      'id': '3',
-      'name': 'Summer Smith',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/3.jpeg',
-    },
-    {
-      'id': '4',
-      'name': 'Beth Smith',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/4.jpeg',
-    },
-    {
-      'id': '5',
-      'name': 'Jerry Smith',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/5.jpeg',
-    },
-    {
-      'id': '6',
-      'name': 'Abadango Cluster Princess',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/6.jpeg',
-    },
-    {
-      'id': '7',
-      'name': 'Abradolf Lincler',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/7.jpeg',
-    },
-    {
-      'id': '8',
-      'name': 'Adjudicator Rick',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/8.jpeg',
-    },
-    {
-      'id': '9',
-      'name': 'Agency Director',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/9.jpeg',
-    },
-    {
-      'id': '10',
-      'name': 'Alan Rails',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/10.jpeg',
-    },
-    {
-      'id': '11',
-      'name': 'Albert Einstein',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/11.jpeg',
-    },
-    {
-      'id': '12',
-      'name': 'Alexander',
-      'image': 'https://rickandmortyapi.com/api/character/avatar/12.jpeg',
-    },
-  ];
-
-  List<Map<String, String>> _foundCharacters = [];
+  List<Character> _foundCharacters = [];
 
   @override
   void initState() {
     _viewModel = IocManager.resolve<HomeViewModel>();
+    _viewModel.addListener(_onViewModelChanged);
     _viewModel.initAuth0();
-    _foundCharacters = _allCharacters;
+    _viewModel.getCharacters();
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _viewModel.removeListener(_onViewModelChanged);
+    super.dispose();
+  }
+
+  void _onViewModelChanged() {
+    setState(() {
+      _foundCharacters = _viewModel.characters;
+    });
+  }
+
   void _runFilter(String enteredKeyword) {
-    List<Map<String, String>> results = [];
+    List<Character> results = [];
     if (enteredKeyword.isEmpty) {
-      results = _allCharacters;
+      results = _viewModel.characters;
     } else {
-      results = _allCharacters
+      results = _viewModel.characters
           .where(
-            (character) => character['name']!.toLowerCase().contains(
+            (character) => character.name.toLowerCase().contains(
                   enteredKeyword.toLowerCase(),
                 ),
           )
@@ -176,7 +127,7 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class _CharacterCard extends StatelessWidget {
-  final Map<String, String> character;
+  final Character character;
 
   const _CharacterCard({required this.character});
 
@@ -195,7 +146,7 @@ class _CharacterCard extends StatelessWidget {
         children: [
           Expanded(
             child: Image.network(
-              character['image']!,
+              character.image,
               fit: BoxFit.cover,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
@@ -213,7 +164,7 @@ class _CharacterCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(6.0),
             child: Text(
-              character['name']!,
+              character.name,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: baseColor,
