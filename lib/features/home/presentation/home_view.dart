@@ -67,11 +67,15 @@ class _HomeViewState extends State<HomeView> {
         actions: [
           TextButton(
             onPressed: () {
-              _viewModel.signIn();
+              if (_viewModel.isAuthenticated) {
+                _viewModel.signOut();
+              } else {
+                _viewModel.signIn();
+              }
             },
-            child: const Text(
-              'Iniciar Sesión',
-              style: TextStyle(color: baseColor),
+            child: Text(
+              _viewModel.isAuthenticated ? 'Cerrar Sesión' : 'Iniciar Sesión',
+              style: const TextStyle(color: baseColor),
             ),
           ),
         ],

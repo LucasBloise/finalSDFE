@@ -19,8 +19,12 @@ class HomeViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _isAuthenticated = false;
+  bool get isAuthenticated => _isAuthenticated;
+
   Future<void> initAuth0() async {
     await _authService.init();
+    await checkAuthentication();
     notifyListeners();
   }
 
@@ -33,13 +37,20 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> checkAuthentication() async {
+    _isAuthenticated = await _authService.isAuthenticated();
+    notifyListeners();
+  }
+
   Future<void> signIn() async {
     await _authService.signIn();
+    await checkAuthentication();
     notifyListeners();
   }
 
   Future<void> signOut() async {
     await _authService.signOut();
+    await checkAuthentication();
     notifyListeners();
   }
 }
