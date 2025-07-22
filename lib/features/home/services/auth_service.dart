@@ -29,6 +29,11 @@ class AuthService implements IAuthService {
   }
 
   @override
+  Future<bool> isAuthenticated() async {
+    return await auth0.hasValidCredentials();
+  }
+
+  @override
   Future<void> init() async {
     await auth0.onLoad().then((final credentials) => print(credentials));
   }
