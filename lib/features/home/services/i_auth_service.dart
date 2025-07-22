@@ -3,4 +3,5 @@ abstract class IAuthService {
   Future<void> signIn();
   Future<void> signOut();
   Future<bool> isAuthenticated();
+  Future<bool> isPremium();
 }

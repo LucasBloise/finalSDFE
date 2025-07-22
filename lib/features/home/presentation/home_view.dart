@@ -120,9 +120,40 @@ class _HomeViewState extends State<HomeView> {
                             childAspectRatio: 0.85,
                           ),
                           itemCount: _foundCharacters.length,
-                          itemBuilder: (context, index) => _CharacterCard(
-                            character: _foundCharacters[index],
-                          ),
+                          itemBuilder: (context, index) {
+                            final character = _foundCharacters[index];
+                            return _CharacterCard(
+                              character: character,
+                              onFavoritePressed: () {
+                                if (!_viewModel.isAuthenticated) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Debes iniciar sesión para guardar favoritos.'),
+                                      backgroundColor: Colors.blueAccent,
+                                    ),
+                                  );
+                                } else if (_viewModel.isPremium) {
+                                  _viewModel.addFavorite(character);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          '${character.name} ha sido añadido a favoritos'),
+                                      backgroundColor: portalGreen,
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Esta es una función premium. Por favor, actualiza tu cuenta.'),
+                                      backgroundColor: dangerRed,
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
                         )
                       : const Text(
                           'No se encontraron personajes',
@@ -138,8 +169,10 @@ class _HomeViewState extends State<HomeView> {
 
 class _CharacterCard extends StatelessWidget {
   final Character character;
+  final VoidCallback onFavoritePressed;
 
-  const _CharacterCard({required this.character});
+  const _CharacterCard(
+      {required this.character, required this.onFavoritePressed});
 
   @override
   Widget build(BuildContext context) {
@@ -151,70 +184,88 @@ class _CharacterCard extends StatelessWidget {
         side: BorderSide(color: portalGreen.withOpacity(0.7), width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Stack(
         children: [
-          Expanded(
-            child: Image.network(
-              character.image,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(
-                  child: CircularProgressIndicator(color: portalGreen),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return const Center(
-                  child: Icon(Icons.error_outline, color: dangerRed, size: 40),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Text(
-                  character.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: baseColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Image.network(
+                  character.image,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(
+                      child: CircularProgressIndicator(color: portalGreen),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child:
+                          Icon(Icons.error_outline, color: dangerRed, size: 40),
+                    );
+                  },
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
                   children: [
-                    Icon(
-                      Icons.circle,
-                      size: 8,
-                      color: switch (character.status) {
-                        'Alive' => portalGreen,
-                        'Dead' => dangerRed,
-                        _ => Colors.grey,
-                      },
-                    ),
-                    const SizedBox(width: 6),
-                    Flexible(
-                      child: Text(
-                        '${character.status} - ${character.species}',
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          color: baseColor,
-                          fontSize: 10,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      character.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: baseColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 8,
+                          color: switch (character.status) {
+                            'Alive' => portalGreen,
+                            'Dead' => dangerRed,
+                            _ => Colors.grey,
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            '${character.status} - ${character.species}',
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              color: baseColor,
+                              fontSize: 10,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: IconButton(
+              icon: const Icon(Icons.favorite_outline, color: baseColor),
+              onPressed: onFavoritePressed,
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withOpacity(0.4),
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(8),
+              ),
             ),
           ),
         ],

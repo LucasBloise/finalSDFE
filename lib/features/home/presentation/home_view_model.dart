@@ -22,6 +22,9 @@ class HomeViewModel extends ChangeNotifier {
   bool _isAuthenticated = false;
   bool get isAuthenticated => _isAuthenticated;
 
+  bool _isPremium = false;
+  bool get isPremium => _isPremium;
+
   Future<void> initAuth0() async {
     await _authService.init();
     await checkAuthentication();
@@ -39,6 +42,15 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> checkAuthentication() async {
     _isAuthenticated = await _authService.isAuthenticated();
+    if (_isAuthenticated) {
+      _isPremium = await _authService.isPremium();
+    }
+    notifyListeners();
+  }
+
+  Future<void> addFavorite(Character character) async {
+    // TODO: Implement actual favorite logic
+    print('Character ${character.name} added to favorites');
     notifyListeners();
   }
 
