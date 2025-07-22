@@ -16,13 +16,20 @@ class HomeViewModel extends ChangeNotifier {
   List<Character> _characters = [];
   List<Character> get characters => _characters;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   Future<void> initAuth0() async {
     await _authService.init();
     notifyListeners();
   }
 
   Future<void> getCharacters() async {
+    _isLoading = true;
+    notifyListeners();
+
     _characters = await _characterService.getCharacters();
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -100,24 +100,30 @@ class _HomeViewState extends State<HomeView> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: _foundCharacters.isNotEmpty
-                  ? GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.85,
-                      ),
-                      itemCount: _foundCharacters.length,
-                      itemBuilder: (context, index) => _CharacterCard(
-                        character: _foundCharacters[index],
+              child: _viewModel.isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(portalGreen),
                       ),
                     )
-                  : const Text(
-                      'No se encontraron personajes',
-                      style: TextStyle(color: baseColor, fontSize: 18),
-                    ),
+                  : _foundCharacters.isNotEmpty
+                      ? GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 0.85,
+                          ),
+                          itemCount: _foundCharacters.length,
+                          itemBuilder: (context, index) => _CharacterCard(
+                            character: _foundCharacters[index],
+                          ),
+                        )
+                      : const Text(
+                          'No se encontraron personajes',
+                          style: TextStyle(color: baseColor, fontSize: 18),
+                        ),
             ),
           ],
         ),
