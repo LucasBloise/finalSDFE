@@ -18,4 +18,3 @@ abstract class INavigation {
 
   void pop(BuildContext context);
 }
-

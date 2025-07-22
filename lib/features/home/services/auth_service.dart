@@ -50,8 +50,8 @@ class AuthService implements IAuthService {
 
     final Map<String, dynamic> decodedToken =
         JwtDecoder.decode(_credentials!.idToken);
-    final roles = decodedToken['http://localhost:3000/roles'] as List?;
+    final roles = decodedToken['https://finalSistemasDistribuidos/roles'] as List?;
 
-    return roles?.contains('premium') ?? false;
+    return roles?.contains('PremiumUser') ?? false;
   }
 }

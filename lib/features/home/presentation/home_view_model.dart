@@ -48,6 +48,11 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> checkPremium() async {
+    _isPremium = await _authService.isPremium();
+    notifyListeners();
+  }
+
   Future<void> addFavorite(Character character) async {
     // TODO: Implement actual favorite logic
     print('Character ${character.name} added to favorites');

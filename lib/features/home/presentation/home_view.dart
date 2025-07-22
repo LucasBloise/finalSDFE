@@ -65,6 +65,16 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: spaceDark,
         foregroundColor: baseColor,
         actions: [
+          if (_viewModel.isAuthenticated)
+            TextButton(
+              onPressed: () {
+                context.router.pushNamed('/favorites');
+              },
+              child: const Text(
+                'Mis Favoritos',
+                style: TextStyle(color: baseColor),
+              ),
+            ),
           TextButton(
             onPressed: () {
               if (_viewModel.isAuthenticated) {
@@ -125,6 +135,7 @@ class _HomeViewState extends State<HomeView> {
                             return _CharacterCard(
                               character: character,
                               onFavoritePressed: () {
+                                _viewModel.checkPremium();
                                 if (!_viewModel.isAuthenticated) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

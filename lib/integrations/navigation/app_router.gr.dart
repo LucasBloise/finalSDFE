@@ -9,22 +9,40 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i2;
-import 'package:final_sd_front/features/home/presentation/home_view.dart'
+import 'package:auto_route/auto_route.dart' as _i3;
+import 'package:final_sd_front/features/favorites/presentation/favorites_view.dart'
     as _i1;
+import 'package:final_sd_front/features/home/presentation/home_view.dart'
+    as _i2;
 
 /// generated route for
-/// [_i1.HomeView]
-class HomeRoute extends _i2.PageRouteInfo<void> {
-  const HomeRoute({List<_i2.PageRouteInfo>? children})
-    : super(HomeRoute.name, initialChildren: children);
+/// [_i1.FavoritesView]
+class FavoritesRoute extends _i3.PageRouteInfo<void> {
+  const FavoritesRoute({List<_i3.PageRouteInfo>? children})
+      : super(FavoritesRoute.name, initialChildren: children);
+
+  static const String name = 'FavoritesRoute';
+
+  static _i3.PageInfo page = _i3.PageInfo(
+    name,
+    builder: (data) {
+      return const _i1.FavoritesView();
+    },
+  );
+}
+
+/// generated route for
+/// [_i2.HomeView]
+class HomeRoute extends _i3.PageRouteInfo<void> {
+  const HomeRoute({List<_i3.PageRouteInfo>? children})
+      : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i2.PageInfo page = _i2.PageInfo(
+  static _i3.PageInfo page = _i3.PageInfo(
     name,
     builder: (data) {
-      return const _i1.HomeView();
+      return const _i2.HomeView();
     },
   );
 }

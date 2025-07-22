@@ -1,3 +1,4 @@
+import 'package:final_sd_front/features/favorites/presentation/favorites_view_model.dart';
 import 'package:final_sd_front/features/home/presentation/home_view_model.dart';
 import 'package:final_sd_front/features/home/services/auth_service.dart';
 import 'package:final_sd_front/features/home/services/character_service.dart';
@@ -8,6 +9,7 @@ import 'package:final_sd_front/integrations/http_helper/http_helper.dart';
 import 'package:final_sd_front/integrations/http_helper/i_http_helper.dart';
 import 'package:final_sd_front/integrations/injector/i_injector.dart';
 import 'package:final_sd_front/integrations/injector/injector.dart';
+import 'package:final_sd_front/integrations/navigation/app_router.dart';
 import 'package:final_sd_front/integrations/navigation/i_navigation.dart';
 import 'package:final_sd_front/integrations/navigation/navigation.dart';
 import 'package:final_sd_front/integrations/navigation/routes.dart';
@@ -36,6 +38,7 @@ abstract class IocManager {
             authService: resolve<IAuthService>(),
             characterService: resolve<ICharacterService>()),
       )
+      ..registerFactory<FavoritesViewModel>(() => FavoritesViewModel())
       ..registerLazySingleton<INavigation>(() => Navigation(routeBuilders));
   }
 
