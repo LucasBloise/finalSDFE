@@ -30,7 +30,8 @@ abstract class IocManager {
           publicRequestsDio: HttpClientInstances.httpPublicClient,
         ),
       )
-      ..registerLazySingleton<IAuthService>(AuthService.new)
+      ..registerLazySingleton<IAuthService>(
+          () => AuthService(httpHelper: resolve<IHttpHelper>()))
       ..registerLazySingleton<ICharacterService>(
           () => CharacterService(httpHelper: resolve<IHttpHelper>()))
       ..registerFactory<HomeViewModel>(

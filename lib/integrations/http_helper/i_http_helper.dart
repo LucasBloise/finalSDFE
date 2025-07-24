@@ -16,7 +16,7 @@ abstract class IHttpHelper {
 
   Future<HttpResponse<T>> delete<T>(String url, {data});
 
-  void addHeader(String key, dynamic value);
+  Future<void> addHeader(String key, dynamic value);
 }
 
 class HttpResponse<T> {

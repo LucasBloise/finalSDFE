@@ -152,7 +152,8 @@ class HttpHelper implements IHttpHelper {
   }
 
   @override
-  void addHeader(String key, dynamic value) {
+  Future<void> addHeader(String key, dynamic value) async {
+    print('adding header $key: $value');
     _privateDio.options.headers[key] = value;
   }
 
