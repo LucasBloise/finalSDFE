@@ -1,4 +1,6 @@
 import 'package:final_sd_front/features/favorites/presentation/favorites_view_model.dart';
+import 'package:final_sd_front/features/favorites/services/favorite_service.dart';
+import 'package:final_sd_front/features/favorites/services/i_favorite_service.dart';
 import 'package:final_sd_front/features/home/presentation/home_view_model.dart';
 import 'package:final_sd_front/features/home/services/auth_service.dart';
 import 'package:final_sd_front/features/home/services/character_service.dart';
@@ -34,12 +36,21 @@ abstract class IocManager {
           () => AuthService(httpHelper: resolve<IHttpHelper>()))
       ..registerLazySingleton<ICharacterService>(
           () => CharacterService(httpHelper: resolve<IHttpHelper>()))
+      ..registerLazySingleton<IFavoriteService>(
+          () => FavoriteService(httpHelper: resolve<IHttpHelper>()))
       ..registerFactory<HomeViewModel>(
         () => HomeViewModel(
-            authService: resolve<IAuthService>(),
-            characterService: resolve<ICharacterService>()),
+          authService: resolve<IAuthService>(),
+          characterService: resolve<ICharacterService>(),
+          favoriteService: resolve<IFavoriteService>(),
+        ),
       )
-      ..registerFactory<FavoritesViewModel>(() => FavoritesViewModel())
+      ..registerFactory<FavoritesViewModel>(
+        () => FavoritesViewModel(
+          favoriteService: resolve<IFavoriteService>(),
+          characterService: resolve<ICharacterService>(),
+        ),
+      )
       ..registerLazySingleton<INavigation>(() => Navigation(routeBuilders));
   }
 

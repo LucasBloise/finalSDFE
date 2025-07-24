@@ -1,3 +1,4 @@
+import 'package:final_sd_front/features/favorites/services/i_favorite_service.dart';
 import 'package:final_sd_front/features/home/data/character.dart';
 import 'package:final_sd_front/features/home/services/i_auth_service.dart';
 import 'package:final_sd_front/features/home/services/i_character_service.dart';
@@ -6,12 +7,15 @@ import 'package:flutter/material.dart';
 class HomeViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final ICharacterService _characterService;
+  final IFavoriteService _favoriteService;
 
   HomeViewModel({
     required IAuthService authService,
     required ICharacterService characterService,
+    required IFavoriteService favoriteService,
   })  : _authService = authService,
-        _characterService = characterService;
+        _characterService = characterService,
+        _favoriteService = favoriteService;
 
   List<Character> _characters = [];
   List<Character> get characters => _characters;
@@ -54,8 +58,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> addFavorite(Character character) async {
-    // TODO: Implement actual favorite logic
-    print('Character ${character.name} added to favorites');
+    await _favoriteService.addFavorite(character.id);
     notifyListeners();
   }
 
